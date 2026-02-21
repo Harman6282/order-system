@@ -24,19 +24,29 @@ func NewStorage(db *sql.DB) Storage {
 	}
 }
 
-type PaidStatus string
+// type PaidStatus string
 
+// const (
+// 	Pending PaidStatus = "pending"
+// 	Paid    PaidStatus = "paid"
+// 	Failed  PaidStatus = "failed"
+// )
+
+
+type OrderStatus string 
 const (
-	Pending PaidStatus = "pending"
-	Paid    PaidStatus = "paid"
-	Failed  PaidStatus = "failed"
+	CREATED  OrderStatus = "created"
+	PAID 	OrderStatus = "paid"
+	PROCESSING OrderStatus = "processing"
+	COMPLETED OrderStatus = "completed"
+	FAILED 	OrderStatus = "failed"
 )
 
 type Order struct {
 	ID            string
 	ProductName      string
 	Price         int
-	PaymentStatus PaidStatus
+	OrderStatus   OrderStatus
 	CreatedAt     time.Time
 	UpdatedAt     time.Time
 }
