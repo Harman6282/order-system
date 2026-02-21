@@ -2,7 +2,6 @@ package main
 
 import (
 	"context"
-	"database/sql"
 	"fmt"
 	"log"
 	"net/http"
@@ -15,8 +14,7 @@ import (
 
 type application struct {
 	config config
-	db     *sql.DB
-	store  store.Storage
+	store  *store.Storage
 }
 
 type config struct {
@@ -39,14 +37,16 @@ func main() {
 
 	app := &application{
 		config: cfg,
-		db:     db,
+		store:  store.NewStorage(db),
 	}
 
 	r.Get("/", app.health)
 	r.Post("/create-order", app.createOrder)
+	r.Patch("/pay/{id}", app.payOrder)
+	r.Get("/status/{id}", app.checkStatus)
 
 	fmt.Println("server started at :8080")
-	
+
 	err = http.ListenAndServe(app.config.addr, r)
 	if err != nil {
 		log.Fatalf("error starting server: %v", err)
