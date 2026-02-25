@@ -1,5 +1,3 @@
-version: "3.8"
-
 services:
   db:
     image: postgres:16.3
@@ -13,19 +11,28 @@ services:
     ports:
       - "5432:5432"
 
+  migrate:
+    image: harmanxze/order-app:latest
+    command:
+      [
+        "./migrate",
+        "-path",
+        "/app/migrations",
+        "-database",
+        "postgres://admin:adminpassword@db:5432/orderDB?sslmode=disable",
+        "up"
+      ]
+    depends_on:
+      - db
+    restart: "no"
+
   backend:
     image: harmanxze/order-app:latest
     container_name: order-app-container
     depends_on:
-      - db
+      - migrate
     ports:
       - "8080:8080"
 
-  migrate:
-    image: harmanxze/order-app:latest
-    command: [ "./migrate/migrations" ]
-    depends_on:
-      - db
-      
 volumes:
   orders-data:
