@@ -1,5 +1,5 @@
 MIGRATIONS_PATH = ./cmd/migrate/migrations
-DB_URL = "postgres://admin:adminpassword@localhost:5432/orderDB?sslmode=disable"
+DB_URL = "postgres://admin:adminpassword@db:5432/orderDB?sslmode=disable"
 
 
 .PHONY: migrate-create

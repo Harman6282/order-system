@@ -1,0 +1,31 @@
+name: Deploy Orders app
+
+on:
+  push:
+    branches:
+        - main
+
+jobs:
+    build: 
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout Source
+              uses: actions/checkout@v4
+            - name: Login to docker hub
+              run: docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+            - name: Build docker image 
+              run: docker build -t ${{ secrets.DOCKER_USERNAME }}/order-app .
+            - name: Push image to docker hub
+              run: docker push ${{ secrets.DOCKER_USERNAME }}/order-app:latest
+   
+    
+    deploy:
+        needs: build
+        runs-on: self-hosted
+        steps:
+            - name: Pull docker image 
+              run: docker pull ${{ secrets.DOCKER_USERNAME }}/order-app:latest
+            - name: Delete old container
+              run: docker rm -f order-app-container
+            - name: run docker compose 
+              run: docker compose up -d

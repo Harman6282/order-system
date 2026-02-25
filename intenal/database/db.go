@@ -10,7 +10,7 @@ import (
 	_ "github.com/lib/pq"
 )
 
-const DB_URL = "postgres://admin:adminpassword@localhost:5432/orderDB?sslmode=disable"
+const DB_URL = "postgres://admin:adminpassword@db:5432/orderDB?sslmode=disable"
 
 func NewPostgresPool(ctx context.Context) (*sql.DB, error) {
 	db, err := sql.Open("postgres", DB_URL)
