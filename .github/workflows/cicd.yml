@@ -31,3 +31,5 @@ jobs:
               run: docker rm -f order-app-container
             - name: run docker compose 
               run: docker compose up -d
+            - name: Run migrations
+              run: make migrate-up
