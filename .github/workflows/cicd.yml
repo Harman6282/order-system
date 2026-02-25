@@ -30,4 +30,4 @@ jobs:
             - name: Delete old container
               run: docker rm -f order-app-container
             - name: run docker compose 
-              run: docker compose up -d
+              run: docker compose up
