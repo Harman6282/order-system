@@ -18,9 +18,9 @@ func NewPostgresPool(ctx context.Context) (*sql.DB, error) {
 		return nil, fmt.Errorf("failed to open connection pool: %v", err)
 	}
 
-	db.SetMaxOpenConns(10)
-	db.SetMaxIdleConns(10)
-	db.SetConnMaxLifetime(10 * time.Minute)
+	db.SetMaxOpenConns(60)
+	db.SetMaxIdleConns(60)
+	db.SetConnMaxLifetime(5 * time.Minute)
 
 	if err := db.PingContext(ctx); err != nil {
 		log.Fatalf("failed to connect to Database: %v", err)

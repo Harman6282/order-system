@@ -6,11 +6,6 @@ import (
 	"time"
 )
 
-// type ProcessorRepo interface {
-// 	ClaimOrder(ctx context.Context, orderID string) error
-// 	CompleteOrder(ctx context.Context, orderID string) error
-// }
-
 type Processor struct {
 	repo Orders
 }
@@ -30,7 +25,7 @@ func (p *Processor) ProcessOrder(ctx context.Context, orderID string) error {
 	log.Println("processing order: ", orderID)
 
 	// simulate work
-	time.Sleep(2 * time.Second)
+	time.Sleep(1 * time.Millisecond)
 
 	// complete order
 

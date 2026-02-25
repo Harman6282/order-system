@@ -42,7 +42,7 @@ func main() {
 	storage := store.NewStorage(db)
 
 	processor := store.NewProcessor(storage.Order)
-    pool := worker.NewPool(5, processor)
+    pool := worker.NewPool(20, processor)
 
 	
 	app := &application{
@@ -50,7 +50,7 @@ func main() {
 		store:  store.NewStorage(db),
 		pool: pool,
 	}
-	
+
 	pool.Start(ctx)
 	
 	r.Get("/", app.health)
