@@ -36,3 +36,5 @@ jobs:
           sudo mv migrate /usr/local/bin/migrate
       - name: Run migrations
         run: make migrate-up
+
+  
