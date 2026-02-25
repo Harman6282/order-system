@@ -82,6 +82,8 @@ func (app *application) payOrder(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	app.pool.Enqueue(orderId)
+
 	writeJSON(w, http.StatusOK, "order paid successfully", res)
 
 }

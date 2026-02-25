@@ -4,6 +4,7 @@ import (
 	"context"
 	"database/sql"
 	"errors"
+	"log"
 	"time"
 )
 
@@ -19,6 +20,8 @@ type Orders interface {
 	Create(ctx context.Context, id, productName string, price int) (*Order, error)
 	Pay(ctx context.Context, id string) (*payRes, error)
 	GetStatus(ctx context.Context, id string) (OrderStatus, error)
+	ClaimOrder(ctx context.Context, orderID string) error
+	CompleteOrder(ctx context.Context, orderID string) error
 }
 
 type Storage struct {
@@ -125,4 +128,49 @@ func (s *OrderRepo) GetStatus(ctx context.Context, id string) (OrderStatus, erro
 	}
 
 	return status, nil
+}
+
+func (s *OrderRepo) ClaimOrder(ctx context.Context, orderID string) error {
+	tx, err := s.db.BeginTx(ctx, nil)
+	if err != nil {
+		return err
+	}
+
+	query := `
+		SELECT id FROM orders WHERE id = $1 AND status = 'paid' FOR UPDATE
+	`
+
+	var id string
+	err = tx.QueryRowContext(ctx, query, orderID).Scan(&id)
+	if err != nil {
+		tx.Rollback()
+		return err
+	}
+
+	query2 := `UPDATE orders SET status='processing', processing_started_at = NOW() WHERE id = $1`
+	_, err = tx.ExecContext(ctx, query2, orderID)
+	if err != nil {
+		tx.Rollback()
+		return err
+	}
+
+	return tx.Commit()
+}
+
+func (s *OrderRepo) CompleteOrder(ctx context.Context, orderID string) error {
+
+	_, err := s.db.ExecContext(ctx,
+		`UPDATE orders
+		 SET status='completed'
+		 WHERE id=$1`,
+		orderID,
+	)
+
+	if err != nil {
+		return err
+	}
+
+	log.Printf("order completed: %v", orderID)
+
+	return nil
 }
