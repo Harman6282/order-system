@@ -17,7 +17,7 @@ type OrderRequest struct {
 }
 
 func (app *application) health(w http.ResponseWriter, r *http.Request) {
-	writeJSON(w, http.StatusOK, "working good", nil)
+	writeJSON(w, http.StatusOK, "working good ✌️", nil)
 }
 
 func (app *application) createOrder(w http.ResponseWriter, r *http.Request) {
